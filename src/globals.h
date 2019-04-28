@@ -8,3 +8,5 @@
 extern CRGB leds[];
 
 #define ARTNET_TIMEOUT 5000 // start idle animation after 5s of Artnet missing
+
+#define MIC_PIN 36 // GPIO36 = VP

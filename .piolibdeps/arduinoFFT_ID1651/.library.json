@@ -1,0 +1,50 @@
+{
+    "name": "arduinoFFT", 
+    "version": "1.4", 
+    "keywords": [
+        "data", 
+        "processing"
+    ], 
+    "description": "A library for implementing floating point Fast Fourier Transform calculations on Arduino.", 
+    "frameworks": [
+        "arduino"
+    ], 
+    "platforms": [
+        "atmelavr", 
+        "atmelsam", 
+        "espressif32", 
+        "espressif8266", 
+        "intel_arc32", 
+        "microchippic32", 
+        "nordicnrf51", 
+        "nordicnrf52", 
+        "ststm32", 
+        "teensy", 
+        "timsp430"
+    ], 
+    "authors": [
+        {
+            "email": "enrique@shapeoko.com", 
+            "url": null, 
+            "maintainer": true, 
+            "name": "Enrique Condes"
+        }
+    ], 
+    "repository": {
+        "type": "git", 
+        "url": "https://github.com/kosme/arduinoFFT"
+    }, 
+    "homepage": null, 
+    "export": {
+        "include": null, 
+        "exclude": [
+            "extras", 
+            "docs", 
+            "tests", 
+            "test", 
+            "*.doxyfile", 
+            "*.pdf"
+        ]
+    }, 
+    "id": 1651
+}

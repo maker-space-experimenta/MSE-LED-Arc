@@ -1,4 +1,5 @@
 #include "artnet.h"
+#include "geq.h"
 #include "globals.h"
 #include "idleAnimation.h"
 #include "ota.h"
@@ -29,6 +30,7 @@ void setup() {
 
     idleAnimationSetup();
     artnetInit();
+    geqInit();
 }
 
 void loop() {
@@ -37,4 +39,5 @@ void loop() {
     if (!artnetLoop()) {
         idleAnimationLoop();
     }
+    geqLoop();
 }
