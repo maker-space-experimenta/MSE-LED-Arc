@@ -2,6 +2,7 @@
 #include "geq.h"
 #include "globals.h"
 #include "idleAnimation.h"
+#include "beat.h"
 #include "ota.h"
 #include <Arduino.h>
 #include <FastLED.h>
@@ -11,7 +12,8 @@ WiFiMulti wifi;
 CRGB leds[NUM_LEDS];
 
 void setup() {
-    Serial.begin(115200);
+    pinMode(BUILTIN_LED, OUTPUT);
+    Serial.begin(921600);
     wifi.addAP(WIFI_SSID, WIFI_PASS);
 
     Serial.println("Connecting Wifi...");
@@ -33,11 +35,24 @@ void setup() {
     geqInit();
 }
 
+uint32_t measure = 0;
+
 void loop() {
-    wifi.run();
-    loopOTA();
-    if (!artnetLoop()) {
-        idleAnimationLoop();
-    }
-    geqLoop();
+    // measure = micros();
+    wifi.run(); // 2us
+    // Serial.printf("\nWiFi: %d us", micros() - measure);
+    // measure = micros();
+    loopOTA(); //100us
+    // Serial.printf("\nOTA: %d us", micros() - measure);
+    // measure = micros();
+    // if (!artnetLoop()) { //~5ms
+    //     idleAnimationLoop();
+    // }
+    // Serial.printf("\nAN+LED: %d us", micros() - measure);
+    // measure = micros();
+    // geqLoop(); //~60ms
+    beatLoop();
+    // Serial.println(analogRead(MIC_PIN));
+    // Serial.printf("\nBeat: %d us", micros() - measure);
+    // measure = micros();
 }
