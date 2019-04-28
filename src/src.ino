@@ -1,9 +1,13 @@
 #include <Arduino.h>
 #include <WiFiMulti.h>
 #include <FastLED.h>
+#include "globals.h"
 #include "ota.h"
+#include "idleAnimation.h"
+
 
 WiFiMulti wifi;
+CRGB leds[NUM_LEDS];
 
 void setup() {
 
@@ -18,9 +22,15 @@ void setup() {
     }
 
     initOTA();
+
+    FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
+    FastLED.setBrightness(  BRIGHTNESS );
+
+    idleAnimationSetup();
 }
 
 void loop() {
     loopOTA();
     wifi.run();
+    idleAnimationLoop();
 }
