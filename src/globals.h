@@ -6,3 +6,5 @@
 #define LED_TYPE    WS2811
 #define COLOR_ORDER GRB
 extern CRGB leds[];
+
+#define ARTNET_TIMEOUT 5000 // start idle animation after 5s of Artnet missing

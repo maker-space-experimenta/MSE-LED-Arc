@@ -146,16 +146,22 @@ void idleAnimationSetup() {
     currentBlending = LINEARBLEND;
 }
 
+uint32_t lastIdleAnimationUpdate = 0;
+
 void idleAnimationLoop() {
-    ChangePalettePeriodically();
+    if(millis() - lastIdleAnimationUpdate > (1000 / UPDATES_PER_SECOND)) {
+        lastIdleAnimationUpdate = millis();
+        
+        ChangePalettePeriodically();
 
-    static uint8_t startIndex = 0;
-    startIndex = startIndex + 1; /* motion speed */
+        static uint8_t startIndex = 0;
+        startIndex = startIndex + 1; /* motion speed */
 
-    FillLEDsFromPaletteColors(startIndex);
+        FillLEDsFromPaletteColors(startIndex);
 
-    FastLED.show();
-    FastLED.delay(1000 / UPDATES_PER_SECOND);
+        FastLED.show();
+    }
+    // FastLED.delay(1000 / UPDATES_PER_SECOND);
 }
 
 // Additional notes on FastLED compact palettes:

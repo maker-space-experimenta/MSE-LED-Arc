@@ -1,20 +1,21 @@
-#include <Arduino.h>
-#include <WiFiMulti.h>
-#include <FastLED.h>
+#include "artnet.h"
 #include "globals.h"
-#include "ota.h"
 #include "idleAnimation.h"
-
+#include "ota.h"
+#include <Arduino.h>
+#include <FastLED.h>
+#include <WiFiMulti.h>
 
 WiFiMulti wifi;
 CRGB leds[NUM_LEDS];
 
 void setup() {
-
+    Serial.begin(115200);
     wifi.addAP(WIFI_SSID, WIFI_PASS);
 
     Serial.println("Connecting Wifi...");
-    if(wifi.run() == WL_CONNECTED) {
+    if (wifi.run() == WL_CONNECTED) {
+        WiFi.setHostname(MY_HOSTNAME);
         Serial.println("");
         Serial.println("WiFi connected");
         Serial.println("IP address: ");
@@ -23,14 +24,17 @@ void setup() {
 
     initOTA();
 
-    FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
-    FastLED.setBrightness(  BRIGHTNESS );
+    FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
+    FastLED.setBrightness(BRIGHTNESS);
 
     idleAnimationSetup();
+    artnetInit();
 }
 
 void loop() {
-    loopOTA();
     wifi.run();
-    idleAnimationLoop();
+    loopOTA();
+    if (!artnetLoop()) {
+        idleAnimationLoop();
+    }
 }

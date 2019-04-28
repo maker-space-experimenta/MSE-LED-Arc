@@ -2,6 +2,7 @@
 #include <ArduinoOTA.h>
 
 void initOTA() {
+    Serial.print("Initializing OTA... ");
     // Port defaults to 3232
     // ArduinoOTA.setPort(3232);
 
@@ -42,6 +43,7 @@ void initOTA() {
     });
 
     ArduinoOTA.begin();
+    Serial.println("done.");
 }
 
 void loopOTA() { ArduinoOTA.handle(); }

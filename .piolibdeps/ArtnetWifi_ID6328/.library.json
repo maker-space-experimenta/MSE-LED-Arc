@@ -1,0 +1,40 @@
+{
+    "name": "ArtnetWifi", 
+    "version": "1.2.2", 
+    "keywords": [
+        "communication"
+    ], 
+    "description": "ArtNet with the ESP8266 or ESP32", 
+    "frameworks": [
+        "arduino"
+    ], 
+    "platforms": [
+        "espressif8266", 
+        "espressif32"
+    ], 
+    "authors": [
+        {
+            "email": "stephan.ruloff@gmail.com", 
+            "url": null, 
+            "maintainer": true, 
+            "name": "Stephan Ruloff"
+        }
+    ], 
+    "repository": {
+        "type": "git", 
+        "url": "https://github.com/rstephan/ArtnetWifi"
+    }, 
+    "homepage": "http://github.com/rstephan/ArtnetWifi", 
+    "export": {
+        "include": null, 
+        "exclude": [
+            "extras", 
+            "docs", 
+            "tests", 
+            "test", 
+            "*.doxyfile", 
+            "*.pdf"
+        ]
+    }, 
+    "id": 6328
+}
