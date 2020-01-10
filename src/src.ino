@@ -1,8 +1,8 @@
 #include "artnet.h"
+#include "beat.h"
 #include "geq.h"
 #include "globals.h"
 #include "idleAnimation.h"
-#include "beat.h"
 #include "ota.h"
 #include <Arduino.h>
 #include <FastLED.h>
@@ -10,6 +10,8 @@
 
 WiFiMulti wifi;
 CRGB leds[NUM_LEDS];
+uint16_t ledMapping[] = LED_MAPPING;
+uint8_t ledGroups = sizeof(ledMapping) / sizeof(ledMapping[0]);
 
 void setup() {
     pinMode(BUILTIN_LED, OUTPUT);
@@ -42,16 +44,16 @@ void loop() {
     wifi.run(); // 2us
     // Serial.printf("\nWiFi: %d us", micros() - measure);
     // measure = micros();
-    loopOTA(); //100us
+    loopOTA(); // 100us
     // Serial.printf("\nOTA: %d us", micros() - measure);
     // measure = micros();
-    // if (!artnetLoop()) { //~5ms
-    //     idleAnimationLoop();
-    // }
+    if (!artnetLoop()) { //~5ms
+        idleAnimationLoop();
+    }
     // Serial.printf("\nAN+LED: %d us", micros() - measure);
     // measure = micros();
     // geqLoop(); //~60ms
-    beatLoop();
+    // beatLoop();
     // Serial.println(analogRead(MIC_PIN));
     // Serial.printf("\nBeat: %d us", micros() - measure);
     // measure = micros();
