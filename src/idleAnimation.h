@@ -1,8 +1,6 @@
 #include "globals.h"
 #include <FastLED.h>
 
-#define UPDATES_PER_SECOND 40
-
 // This example shows several ways to set up and use 'palettes' of colors
 // with FastLED.
 //

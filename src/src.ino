@@ -1,9 +1,9 @@
-#include "artnet.h"
-#include "beat.h"
-#include "geq.h"
+//#include "beat.h"
+//#include "geq.h"
 #include "globals.h"
-#include "idleAnimation.h"
+#include "leds.h"
 #include "ota.h"
+#include "mqttLogic.h"
 #include <Arduino.h>
 #include <FastLED.h>
 #include <WiFiMulti.h>
@@ -32,29 +32,18 @@ void setup() {
     FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
     FastLED.setBrightness(BRIGHTNESS);
 
-    idleAnimationSetup();
+    //geqInit();
+    initMqtt();
     artnetInit();
-    geqInit();
 }
 
 uint32_t measure = 0;
 
 void loop() {
-    // measure = micros();
     wifi.run(); // 2us
-    // Serial.printf("\nWiFi: %d us", micros() - measure);
-    // measure = micros();
     loopOTA(); // 100us
-    // Serial.printf("\nOTA: %d us", micros() - measure);
-    // measure = micros();
-    if (!artnetLoop()) { //~5ms
-        idleAnimationLoop();
+    if(!otaRunning) {
+        loopLeds();
+        loopMqtt();
     }
-    // Serial.printf("\nAN+LED: %d us", micros() - measure);
-    // measure = micros();
-    // geqLoop(); //~60ms
-    // beatLoop();
-    // Serial.println(analogRead(MIC_PIN));
-    // Serial.printf("\nBeat: %d us", micros() - measure);
-    // measure = micros();
 }

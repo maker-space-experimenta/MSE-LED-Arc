@@ -1,7 +1,10 @@
 #include "config.h"
 #include <ArduinoOTA.h>
 
+bool otaRunning = false;
+
 void initOTA() {
+    otaRunning = false;
     Serial.print("Initializing OTA... ");
     // Port defaults to 3232
     // ArduinoOTA.setPort(3232);
@@ -25,10 +28,15 @@ void initOTA() {
 
         // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
         Serial.println("Start updating " + type);
+        otaRunning = true;
     });
-    ArduinoOTA.onEnd([]() { Serial.println("\nEnd"); });
-    ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) { Serial.printf("Progress: %u%%\r", (progress / (total / 100))); });
+    ArduinoOTA.onEnd([]() { Serial.println("\nEnd"); otaRunning = false; });
+    ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) { 
+        setLedProgress(progress / (total / 100));
+        Serial.printf("Progress: %u%%\r", (progress / (total / 100))); 
+        });
     ArduinoOTA.onError([](ota_error_t error) {
+        otaRunning = false;
         Serial.printf("Error[%u]: ", error);
         if (error == OTA_AUTH_ERROR)
             Serial.println("Auth Failed");
