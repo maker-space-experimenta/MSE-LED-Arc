@@ -1,3 +1,4 @@
+#include "config.h"
 #include <FastLED.h>
 
 #define DEBUG Serial
