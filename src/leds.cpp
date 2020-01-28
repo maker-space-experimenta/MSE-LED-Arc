@@ -88,9 +88,9 @@ void rainbowAnim() {
     uint32_t now = millis();
     for(uint16_t i = 0; i < NUM_LEDS; i++) {
         uint16_t timeOffset = (255UL * (now % 5000)) / 5000;
-        uint16_t ledOffset = (255UL * i) / (NUM_LEDS);
+        uint16_t ledOffset = (255UL * i) / (NUM_LEDS - 1);
         uint8_t hue = (timeOffset + ledOffset) % 256;
-        fill_solid(leds, NUM_LEDS, CHSV(hue, 255, 255));
+        leds[i] = CHSV(hue, 255, 255);
     }
     FastLED.show();
 }
