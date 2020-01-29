@@ -1,13 +1,16 @@
 #include "leds.h"
+#include "ledAnimation.h"
 
 const char* effectNames[] = {
     "static",
     "artnet",
     "colorpalette",
-    "rainbow",
 };
 int numEffects = sizeof(effectNames) / sizeof(effectNames[0]);
 
+CRGB leds[NUM_LEDS];
+uint16_t ledMapping[] = LED_MAPPING;
+uint8_t ledGroups = sizeof(ledMapping) / sizeof(ledMapping[0]);
 
 fx_t effectStringToFx(String effectName) {
     fx_t result = (fx_t)-1;
@@ -26,7 +29,8 @@ ledState_t curLedState = {
     INIT_STATE,
     INIT_BRIGHTNESS,
     INIT_COLOR,
-    fx_colorpalette
+    fx_colorpalette,
+    5000
 };
 
 
@@ -51,12 +55,33 @@ void setLedBrightness(uint8_t brightness) {
 
 void setLedColor(uint32_t color) {
     curLedState.color = color;
+    setAnimationBaseColor(color);
+}
+
+void setLedAnimationTime(uint32_t transition) {
+    curLedState.animationTime = transition;
 }
 
 void setLedEffect(String effect) {
-    fx_t a = effectStringToFx(effect);
-    if(a > -1) {
-        curLedState.effect = a;
+    fx_t fx = effectStringToFx(effect);
+    if(fx > -1) {
+        curLedState.effect = fx;
+    }
+    else {
+        uint8_t anim = animationNameToId(effect.c_str());
+        if(anim > -1) {
+            setAnimation(anim);
+            curLedState.effect = fx_animation;
+        }
+    }
+}
+
+const char* getCurLedEffectName() {
+    if(curLedState.effect != fx_animation) {
+        return effectNames[curLedState.effect];
+    }
+    else {
+        return getCurAnimationName();
     }
 }
 
@@ -65,6 +90,7 @@ void setLedState(ledState_t state) {
     curLedState.brightness = state.brightness;
     curLedState.color = state.color;
     curLedState.effect = state.effect;
+    curLedState.animationTime = state.animationTime;
 
     //applyLedState();
 }
@@ -84,25 +110,14 @@ void setLedProgress(uint8_t percent) {
     }
 }
 
-void rainbowAnim() {
-    uint32_t now = millis();
-    for(uint16_t i = 0; i < NUM_LEDS; i++) {
-        uint16_t timeOffset = (255UL * (now % 5000)) / 5000;
-        uint16_t ledOffset = (255UL * i) / (NUM_LEDS - 1);
-        uint8_t hue = (timeOffset + ledOffset) % 256;
-        leds[i] = CHSV(hue, 255, 255);
-    }
-    FastLED.show();
-}
-
 void initLeds() {
     //leds.begin();
     idleAnimationSetup();
     //applyLedState();
+    initAnimation(NUM_LEDS);
 }
 
-uint32_t lastLedUpdate = 0;
-uint16_t animationStep = 0;
+uint32_t lastLedUpdate = 0, lastAnimationStep = 0;
 
 void loopLeds() {
     if(millis() - lastLedUpdate > (1000 / UPDATES_PER_SECOND)) {
@@ -114,23 +129,24 @@ void loopLeds() {
             FastLED.show();
         }
         else {
-            //Serial.print(curLedState.effect);
             switch(curLedState.effect) {
                 case fx_static:
-                    //Serial.println("static");
                     fill_solid(leds, NUM_LEDS, CRGB(curLedState.color));
                     FastLED.show();
                     break;
                 case fx_artnet:
-                    //Serial.println("artnet");
                     artnetLoop();
                     break;
                 case fx_colorpalette:
-                    //Serial.println("colorpalette");
                     idleAnimationLoop();
                     break;
-                case fx_rainbow:
-                    rainbowAnim();
+                case fx_animation:
+                    if(millis() - lastAnimationStep > (curLedState.animationTime / 256)) {
+                        // TODO: not sure if I want to skip animation steps, or freeze when timing is not met
+                        lastAnimationStep = millis();
+                        stepAnimation();
+                        FastLED.show();
+                    }
                     break;
                 default:
                     break;

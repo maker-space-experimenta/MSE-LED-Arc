@@ -9,9 +9,6 @@
 #include <WiFiMulti.h>
 
 WiFiMulti wifi;
-CRGB leds[NUM_LEDS];
-uint16_t ledMapping[] = LED_MAPPING;
-uint8_t ledGroups = sizeof(ledMapping) / sizeof(ledMapping[0]);
 
 void setup() {
     pinMode(BUILTIN_LED, OUTPUT);
@@ -32,7 +29,7 @@ void setup() {
     FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
     FastLED.setBrightness(BRIGHTNESS);
 
-    //geqInit();
+    initLeds();
     initMqtt();
     artnetInit();
 }

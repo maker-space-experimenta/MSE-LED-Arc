@@ -1,4 +1,5 @@
 #include "config.h"
+#define FASTLED_INTERNAL // disable the FastLED pragma messages
 #include <FastLED.h>
 
 #define DEBUG Serial
@@ -12,7 +13,9 @@ extern CRGB leds[];
 #define INIT_STATE false
 #define INIT_BRIGHTNESS  255
 #define INIT_COLOR  0xFFFFFF
-#define UPDATES_PER_SECOND 40
+#define UPDATES_PER_SECOND 60
+
+#define ANIMATION_USE_FASTLED
 
 #define LED_MAPPING {72, 71} // maximum 170 LEDs per ArtNet universe
 extern uint16_t ledMapping[];

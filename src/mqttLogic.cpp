@@ -1,6 +1,7 @@
 #include "mqttLogic.h"
 #include "globals.h"
 #include "leds.h"
+#include "ledAnimation.h"
 #include <ArduinoJson.h>
 #include <MQTT.h>
 #include <WiFiClient.h>
@@ -33,6 +34,10 @@ void sendAutoDiscovery() {
         for(uint8_t i = 0; i < numEffects; i++) {
             fx.add(effectNames[i]);
         }
+        anim_t *anims = getAnimations();
+        for(uint8_t i = 0; i < getAnimationCount(); i++) {
+            fx.add(anims[i].animName);
+        }
     }
 
     // those two options make autodiscovery not work anymore somehow
@@ -54,7 +59,7 @@ void sendLedState() {
     DynamicJsonDocument payload(500);
     payload["state"] = state.state ? "ON" : "OFF";
     payload["brightness"] = state.brightness;
-    payload["effect"] = effectNames[state.effect];
+    payload["effect"] = getCurLedEffectName();
     JsonObject c = payload.createNestedObject("color");
     c["r"] = (state.color >> 16) & 0xFF;
     c["g"] = (state.color >> 8) & 0xFF;
@@ -66,7 +71,7 @@ void sendLedState() {
 
     String buf;
     serializeJson(payload, buf);
-    mqtt.publish(String(baseTopic + "/state"), buf); 
+    mqtt.publish(String(baseTopic + "/state"), buf, true, 0); // retain = true
 }
 
 
@@ -124,7 +129,7 @@ void mqttMessageHandler(String &topic, String &payload) {
     }
 }
 
-
+bool firstConnect = true;
 void connectMqtt() {
     DEBUG.print("Connecting to broker");
     
@@ -142,7 +147,9 @@ void connectMqtt() {
     DEBUG.println(" done.");
     mqtt.subscribe(baseTopic + "/set");
 
-    sendLedState();
+    if(!firstConnect) {
+        sendLedState();
+    }
 }
 
 
@@ -154,6 +161,11 @@ void initMqtt() {
 
     connectMqtt();
     sendAutoDiscovery();
+    if(firstConnect) {
+        firstConnect = false;
+        delay(1); // somehow homeassistant doesn't recognize the initial state if it's sent too quickly after the config
+        sendLedState();
+    }
 }
 
 
