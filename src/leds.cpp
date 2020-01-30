@@ -13,7 +13,7 @@ uint16_t ledMapping[] = LED_MAPPING;
 uint8_t ledGroups = sizeof(ledMapping) / sizeof(ledMapping[0]);
 
 fx_t effectStringToFx(String effectName) {
-    fx_t result = (fx_t)-1;
+    fx_t result = fx_undefined;
     for(int i = 0; i < numEffects; i++) {
         if(effectName == String(effectNames[i])) {
             result = (fx_t)i;

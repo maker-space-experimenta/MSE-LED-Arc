@@ -5,6 +5,7 @@
 #include "artnet.h"
 
 typedef enum effect {
+    fx_undefined        = -1,
     fx_static           = 0,
     fx_artnet           = 1,
     fx_colorpalette     = 2,
