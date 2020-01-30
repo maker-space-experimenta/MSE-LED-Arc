@@ -76,14 +76,6 @@ void sendLedState() {
 
 
 void parseHAssCmd(String &payload) {
-    // Update: should not be needed anymore, due to retain being set to false in the discovery message
-    // TODO: remove if first real command gets ignored
-    // ignore first message that controller receives, so it will init correctly
-    // workaround TODO: find neater solution
-    if(ignoreRetainedMessage) {
-        ignoreRetainedMessage = false;
-        return;
-    }
 
     DynamicJsonDocument doc(500);
     DeserializationError err = deserializeJson(doc, payload);
