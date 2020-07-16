@@ -29,7 +29,7 @@
     #define LED_MAPPING {NUM_LEDS}
     #define INIT_STATE true
     #define MY_HOSTNAME "MSE-LED-Bottle"
-    #define COLOR_ORDER RGB
+    #define COLOR_ORDER GRB
 #endif
 
 #define BRIGHTNESS  255
