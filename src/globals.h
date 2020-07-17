@@ -5,7 +5,7 @@
 #define DEBUG Serial
 
 // #define DEVICE_ARC
-#define DEVICE_PALMTREE
+#define DEVICE_BOTTLE
 
 #ifdef DEVICE_ARC
     #define LED_PIN     12
@@ -22,6 +22,14 @@
     #define INIT_STATE true
     #define MY_HOSTNAME "MSE-LED-Palmtree"
     #define COLOR_ORDER RGB
+#endif
+#ifdef DEVICE_BOTTLE
+    #define LED_PIN     12
+    #define NUM_LEDS    24
+    #define LED_MAPPING {NUM_LEDS}
+    #define INIT_STATE true
+    #define MY_HOSTNAME "MSE-LED-Bottle"
+    #define COLOR_ORDER GRB
 #endif
 
 #define BRIGHTNESS  255
