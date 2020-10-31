@@ -4,8 +4,8 @@
 
 #define DEBUG Serial
 
-// #define DEVICE_ARC
-#define DEVICE_BOTTLE
+#define DEVICE_ARC
+// #define DEVICE_BOTTLE
 
 #ifdef DEVICE_ARC
     #define LED_PIN     12
