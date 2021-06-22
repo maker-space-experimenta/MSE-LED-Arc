@@ -152,6 +152,7 @@ void initMqtt() {
     baseTopic = DISCOVERY_PREFIX "/light/" MY_HOSTNAME;
 
     connectMqtt();
+    delay(1);
     sendAutoDiscovery();
     if(firstConnect) {
         firstConnect = false;
